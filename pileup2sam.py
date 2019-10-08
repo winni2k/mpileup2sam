@@ -89,6 +89,7 @@ def read_char_to_seq(char, ref):
 @click.command()
 @click.argument('input', type=click.File('rt'))
 @click.argument('output', type=click.File('wt'))
+@click.version_option()
 @click.option('-r', '--reference', required=True, type=click.Path(exists=True),
               help='Indexed FASTA reference file that was used to create the pileup input file')
 def cli(input, output, reference):
