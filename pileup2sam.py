@@ -16,7 +16,7 @@ class BufferedLineReader:
         return itertools.chain(self.buffer, self.fh.readlines())
 
 
-def generate_sample_names_from_mpileup_line(line):
+def generate_sample_names_from_pileup_line(line):
     return [f'sample_{idx}' for idx in range((len(line.split()) // 3) - 1)]
 
 
@@ -36,9 +36,9 @@ class Converter:
         self.ref_seq_sizes = ref_seq_sizes
 
     @classmethod
-    def from_mpileup_file_handle_and_reference(cls, fh, ref_file):
+    def from_pileup_file_handle_and_reference(cls, fh, ref_file):
         fh = BufferedLineReader(fh)
-        sample_ids = generate_sample_names_from_mpileup_line(fh.peek_line())
+        sample_ids = generate_sample_names_from_pileup_line(fh.peek_line())
         ref_seqs, ref_seq_sizes = get_ref_seqs_and_sizes_from_ref_filehandle(ref_file)
         return cls(fh=fh, sample_ids=sample_ids, ref_seqs=ref_seqs, ref_seq_sizes=ref_seq_sizes)
 
@@ -87,17 +87,17 @@ def read_char_to_seq(char, ref):
 def main(argv):
     import argparse
 
-    parser = argparse.ArgumentParser(description='Convert mpileup to SAM')
-    parser.add_argument('mpileup', help='input mpileup file')
+    parser = argparse.ArgumentParser(description='Convert pileup to SAM')
+    parser.add_argument('pileup', help='input pileup file')
     parser.add_argument('out_sam', help='output SAM file')
     parser.add_argument(
         '-r', '--reference',
-        help='Indexed FASTA reference file that was used to create the mpileup input file'
+        help='Indexed FASTA reference file that was used to create the pileup input file'
     )
 
     args = parser.parse_args(argv)
-    with open(args.mpileup, 'r') as fh:
-        converter = Converter.from_mpileup_file_handle_and_reference(fh=fh,
+    with open(args.pileup, 'r') as fh:
+        converter = Converter.from_pileup_file_handle_and_reference(fh=fh,
                                                                      ref_file=args.reference)
         with open(args.out_sam, 'w') as ofh:
             for line in converter.lines():

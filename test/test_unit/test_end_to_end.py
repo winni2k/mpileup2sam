@@ -2,7 +2,7 @@ import difflib
 import io
 import re
 
-from mpileup2sam import Converter
+from pileup2sam import Converter
 
 
 def make_spaces_tabs(input):
