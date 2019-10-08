@@ -27,11 +27,13 @@ def test_convert_two_samples_one_read():
     lines = list(converter.lines())
 
     # then
-    assert ''.join(lines) == make_spaces_tabs('@HD VN:1.6 SO:unknown\n'
-                                              '@SQ SN:1 LN:10005\n'
-                                              '@RG ID:0 SM:samp_0\n'
-                                              '@RG ID:1 SM:samp_1\n'
-                                              'r0 0 1 10005 0 1M * 0 0 C F RG:Z:1\n'), difflib.Differ()
+    assert ''.join(lines) == make_spaces_tabs(
+        '@HD VN:1.6 SO:unknown\n'
+        '@SQ SN:1 LN:10005\n'
+        '@RG ID:0 SM:samp_0\n'
+        '@RG ID:1 SM:samp_1\n'
+        'r0 0 1 10005 0 1M * 0 0 C F RG:Z:1\n'
+    ), difflib.Differ()
 
 
 def test_convert_one_sample_one_read():
@@ -47,10 +49,12 @@ def test_convert_one_sample_one_read():
     lines = list(converter.lines())
 
     # then
-    assert ''.join(lines) == make_spaces_tabs('@HD VN:1.6 SO:unknown\n'
-                                              '@SQ SN:1 LN:10005\n'
-                                              '@RG ID:0 SM:samp_0\n'
-                                              'r0 0 1 10005 0 1M * 0 0 C F RG:Z:0\n'), difflib.Differ()
+    assert ''.join(lines) == make_spaces_tabs(
+        '@HD VN:1.6 SO:unknown\n'
+        '@SQ SN:1 LN:10005\n'
+        '@RG ID:0 SM:samp_0\n'
+        'r0 0 1 10005 0 1M * 0 0 C F RG:Z:0\n'
+    ), difflib.Differ()
 
 
 def test_convert_one_sample_two_reads():

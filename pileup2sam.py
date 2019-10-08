@@ -1,6 +1,8 @@
 import itertools
 import re
 
+import click
+
 
 class BufferedLineReader:
 
@@ -84,27 +86,17 @@ def read_char_to_seq(char, ref):
     return 0x0, char
 
 
-def main(argv):
-    import argparse
-
-    parser = argparse.ArgumentParser(description='Convert pileup to SAM')
-    parser.add_argument('pileup', help='input pileup file')
-    parser.add_argument('out_sam', help='output SAM file')
-    parser.add_argument(
-        '-r', '--reference',
-        help='Indexed FASTA reference file that was used to create the pileup input file'
-    )
-
-    args = parser.parse_args(argv)
-    with open(args.pileup, 'r') as fh:
-        converter = Converter.from_pileup_file_handle_and_reference(fh=fh,
-                                                                     ref_file=args.reference)
-        with open(args.out_sam, 'w') as ofh:
-            for line in converter.lines():
-                ofh.write(line)
+@click.command()
+@click.argument('input', type=click.File('rt'))
+@click.argument('output', type=click.File('wt'))
+@click.option('-r', '--reference', required=True, type=click.Path(exists=True),
+              help='Indexed FASTA reference file that was used to create the pileup input file')
+def cli(input, output, reference):
+    converter = Converter.from_pileup_file_handle_and_reference(fh=input, ref_file=reference)
+    for line in converter.lines():
+        output.write(line)
     return 0
 
 
-def cli():
-    import sys
-    return main(sys.argv[1:])
+if __name__ == '__main__':
+    cli()
